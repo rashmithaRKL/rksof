@@ -1,131 +1,145 @@
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import AnimatedScene from '../components/3d/AnimatedScene';
 
-function Home() {
+const Home = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <div className="relative">
-      {/* Hero Section with 3D Animation */}
-      <section className="relative min-h-screen flex items-center">
-        <AnimatedScene />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 fade-in">
-              Innovative Software Solutions for Your Business
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-300 slide-up">
-              We create cutting-edge web, mobile, and desktop applications that drive business growth.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link to="/contact" className="btn-primary">
-                Get Started
-              </Link>
-              <Link to="/projects" className="btn-secondary">
-                View Our Work
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+      <AnimatedScene />
+      
+      {/* Hero Section */}
+      <motion.div
+        className="relative z-10 container mx-auto px-4 pt-32 pb-20"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.h1 
+          className="text-6xl md:text-8xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-yellow-400 to-red-500"
+          variants={itemVariants}
+        >
+          Innovative Software Solutions for Your Business
+        </motion.h1>
+        
+        <motion.p 
+          className="text-xl md:text-2xl mb-12 text-gray-300 max-w-3xl"
+          variants={itemVariants}
+        >
+          We create cutting-edge web, mobile, and desktop applications that drive business growth.
+        </motion.p>
+        
+        <motion.div 
+          className="flex flex-wrap gap-6"
+          variants={itemVariants}
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 bg-gradient-to-r from-red-600 to-yellow-500 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Get Started
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 border-2 border-yellow-400 rounded-lg font-semibold text-lg hover:bg-yellow-400 hover:text-black transition-all duration-300"
+          >
+            View Our Work
+          </motion.button>
+        </motion.div>
+      </motion.div>
 
-      {/* Services Overview */}
-      <section className="section bg-white">
-        <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Our Expertise
-          </h2>
+      {/* Features Section */}
+      <motion.section
+        className="relative z-10 bg-gradient-to-b from-transparent to-gray-900 py-20"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+      >
+        <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Web Applications */}
-            <div className="p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <i className="fas fa-globe text-4xl text-primary mb-4"></i>
-              <h3 className="text-xl font-bold mb-3">Web Applications</h3>
-              <p className="text-gray-600">
-                Modern, responsive web applications built with cutting-edge technologies.
-              </p>
-            </div>
-
-            {/* Mobile Applications */}
-            <div className="p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <i className="fas fa-mobile-alt text-4xl text-primary mb-4"></i>
-              <h3 className="text-xl font-bold mb-3">Mobile Applications</h3>
-              <p className="text-gray-600">
-                Native and cross-platform mobile apps for iOS and Android.
-              </p>
-            </div>
-
-            {/* Desktop Applications */}
-            <div className="p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <i className="fas fa-desktop text-4xl text-primary mb-4"></i>
-              <h3 className="text-xl font-bold mb-3">Desktop Applications</h3>
-              <p className="text-gray-600">
-                Powerful desktop software solutions for Windows, macOS, and Linux.
-              </p>
-            </div>
+            {[
+              {
+                icon: "🚀",
+                title: "Fast Development",
+                description: "Quick turnaround with quality code delivery"
+              },
+              {
+                icon: "💡",
+                title: "Innovative Solutions",
+                description: "Cutting-edge technology implementation"
+              },
+              {
+                icon: "🛠️",
+                title: "Scalable Architecture",
+                description: "Built to grow with your business needs"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                className="p-6 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 shadow-xl"
+                whileHover={{ y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-4xl mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-400">{feature.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Why Choose Us */}
-      <section className="section bg-gray-50">
-        <div className="container">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Why Choose RK Software?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Innovation */}
-            <div className="text-center">
-              <i className="fas fa-lightbulb text-4xl text-secondary mb-4"></i>
-              <h3 className="text-xl font-bold mb-2">Innovation</h3>
-              <p className="text-gray-600">
-                Cutting-edge solutions using the latest technologies
-              </p>
-            </div>
-
-            {/* Quality */}
-            <div className="text-center">
-              <i className="fas fa-check-circle text-4xl text-secondary mb-4"></i>
-              <h3 className="text-xl font-bold mb-2">Quality</h3>
-              <p className="text-gray-600">
-                High-quality code and exceptional user experience
-              </p>
-            </div>
-
-            {/* Support */}
-            <div className="text-center">
-              <i className="fas fa-headset text-4xl text-secondary mb-4"></i>
-              <h3 className="text-xl font-bold mb-2">Support</h3>
-              <p className="text-gray-600">
-                24/7 dedicated support and maintenance
-              </p>
-            </div>
-
-            {/* Experience */}
-            <div className="text-center">
-              <i className="fas fa-star text-4xl text-secondary mb-4"></i>
-              <h3 className="text-xl font-bold mb-2">Experience</h3>
-              <p className="text-gray-600">
-                Years of experience in software development
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="section bg-primary text-white">
-        <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Transform Your Business?
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Let's discuss how our software solutions can help your business grow.
-          </p>
-          <Link to="/contact" className="btn bg-white text-primary hover:bg-gray-100">
-            Contact Us Today
-          </Link>
-        </div>
-      </section>
+      {/* Floating Particles */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-yellow-400 rounded-full"
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+            }}
+            animate={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+            }}
+            transition={{
+              duration: Math.random() * 10 + 10,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            style={{
+              opacity: Math.random() * 0.5 + 0.2
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default Home;

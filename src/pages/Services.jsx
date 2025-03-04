@@ -1,199 +1,163 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-const services = [
-  {
-    id: 'web',
-    title: 'Web Applications',
-    icon: 'fas fa-globe',
-    description: 'Custom web applications that drive business growth and user engagement.',
-    features: [
-      'Responsive Design',
-      'Progressive Web Apps',
-      'E-commerce Solutions',
-      'Content Management Systems',
-      'API Development',
-      'Cloud Integration'
-    ],
-    technologies: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB', 'PostgreSQL']
-  },
-  {
-    id: 'mobile',
-    title: 'Mobile Applications',
-    icon: 'fas fa-mobile-alt',
-    description: 'Native and cross-platform mobile applications for iOS and Android.',
-    features: [
-      'Native iOS Development',
-      'Native Android Development',
-      'Cross-platform Solutions',
-      'Mobile UI/UX Design',
-      'App Store Optimization',
-      'Push Notifications'
-    ],
-    technologies: ['React Native', 'Swift', 'Kotlin', 'Flutter', 'Firebase', 'GraphQL']
-  },
-  {
-    id: 'desktop',
-    title: 'Desktop Applications',
-    icon: 'fas fa-desktop',
-    description: 'Powerful desktop software solutions for Windows, macOS, and Linux.',
-    features: [
-      'Cross-platform Development',
-      'System Integration',
-      'Custom UI Development',
-      'Database Management',
-      'Automated Updates',
-      'Offline Functionality'
-    ],
-    technologies: ['Electron', 'Qt', '.NET', 'Java', 'Python', 'SQLite']
-  }
-];
+const Services = () => {
+  const [hoveredService, setHoveredService] = useState(null);
 
-function ServiceCard({ service, index }) {
+  const services = [
+    {
+      icon: "🌐",
+      title: "Web Applications",
+      description: "Custom web applications that scale with your business",
+      features: [
+        "Responsive Design",
+        "Progressive Web Apps",
+        "E-commerce Solutions",
+        "Real-time Applications"
+      ],
+      color: "from-red-600 to-yellow-500"
+    },
+    {
+      icon: "📱",
+      title: "Mobile Applications",
+      description: "Native and cross-platform mobile solutions",
+      features: [
+        "iOS Development",
+        "Android Development",
+        "Cross-platform Apps",
+        "Mobile UI/UX Design"
+      ],
+      color: "from-yellow-400 to-red-500"
+    },
+    {
+      icon: "🖥️",
+      title: "Desktop Applications",
+      description: "Powerful desktop software solutions",
+      features: [
+        "Windows Applications",
+        "macOS Applications",
+        "Cross-platform Solutions",
+        "System Integration"
+      ],
+      color: "from-black via-red-600 to-yellow-500"
+    }
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      viewport={{ once: true }}
-      className="bg-white rounded-lg shadow-lg overflow-hidden"
-    >
-      <div className="p-6">
-        <div className="text-center mb-6">
-          <i className={`${service.icon} text-5xl text-primary`}></i>
-          <h3 className="text-2xl font-bold mt-4">{service.title}</h3>
-        </div>
-        <p className="text-gray-600 mb-6 text-center">
-          {service.description}
-        </p>
-        
-        <div className="mb-6">
-          <h4 className="text-lg font-semibold mb-3 text-primary">Key Features</h4>
-          <ul className="space-y-2">
-            {service.features.map((feature, index) => (
-              <li key={index} className="flex items-center">
-                <i className="fas fa-check-circle text-secondary mr-2"></i>
-                <span className="text-gray-600">{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white py-20">
+      <motion.div
+        className="container mx-auto px-4"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.h1 
+          className="text-4xl md:text-6xl font-bold text-center mb-4"
+          variants={itemVariants}
+        >
+          Comprehensive software solutions
+        </motion.h1>
+        <motion.p 
+          className="text-xl text-center text-gray-400 mb-16"
+          variants={itemVariants}
+        >
+          tailored to your business needs
+        </motion.p>
 
-        <div>
-          <h4 className="text-lg font-semibold mb-3 text-primary">Technologies</h4>
-          <div className="flex flex-wrap gap-2">
-            {service.technologies.map((tech, index) => (
-              <span
-                key={index}
-                className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.map((service, index) => (
+            <motion.div
+              key={index}
+              className={`relative p-8 rounded-xl bg-gradient-to-br ${service.color} transform transition-all duration-300`}
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              onHoverStart={() => setHoveredService(index)}
+              onHoverEnd={() => setHoveredService(null)}
+            >
+              <div className="text-6xl mb-6">{service.icon}</div>
+              <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
+              <p className="text-gray-200 mb-6">{service.description}</p>
+              
+              <motion.ul className="space-y-3">
+                {service.features.map((feature, featureIndex) => (
+                  <motion.li
+                    key={featureIndex}
+                    className="flex items-center space-x-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ 
+                      opacity: hoveredService === index ? 1 : 0.7,
+                      x: hoveredService === index ? 0 : -10
+                    }}
+                    transition={{ delay: featureIndex * 0.1 }}
+                  >
+                    <span className="text-yellow-400">→</span>
+                    <span>{feature}</span>
+                  </motion.li>
+                ))}
+              </motion.ul>
+
+              <motion.button
+                className="mt-8 px-6 py-3 bg-black bg-opacity-30 rounded-lg hover:bg-opacity-50 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {tech}
-              </span>
-            ))}
-          </div>
+                Learn More
+              </motion.button>
+            </motion.div>
+          ))}
         </div>
-      </div>
-    </motion.div>
-  );
-}
 
-function Services() {
-  return (
-    <div className="pt-20">
-      {/* Hero Section */}
-      <section className="bg-dark text-white py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Services</h1>
-            <p className="text-xl text-gray-300">
-              Comprehensive software solutions tailored to your business needs
-            </p>
-          </motion.div>
+        {/* Floating particles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-yellow-400 rounded-full"
+              animate={{
+                x: [
+                  Math.random() * window.innerWidth,
+                  Math.random() * window.innerWidth
+                ],
+                y: [
+                  Math.random() * window.innerHeight,
+                  Math.random() * window.innerHeight
+                ]
+              }}
+              transition={{
+                duration: Math.random() * 10 + 20,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{
+                opacity: Math.random() * 0.5 + 0.2
+              }}
+            />
+          ))}
         </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <ServiceCard key={service.id} service={service} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Process Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Development Process</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              {
-                icon: 'fas fa-lightbulb',
-                title: 'Discovery',
-                description: 'Understanding your requirements and business objectives'
-              },
-              {
-                icon: 'fas fa-pencil-ruler',
-                title: 'Planning',
-                description: 'Detailed project planning and architecture design'
-              },
-              {
-                icon: 'fas fa-code',
-                title: 'Development',
-                description: 'Agile development with regular updates and feedback'
-              },
-              {
-                icon: 'fas fa-rocket',
-                title: 'Deployment',
-                description: 'Testing, deployment, and ongoing support'
-              }
-            ].map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="w-16 h-16 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center">
-                  <i className={`${step.icon} text-2xl text-white`}></i>
-                </div>
-                <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-primary text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl font-bold mb-6">Ready to Start Your Project?</h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Let's discuss how our services can help transform your business
-            </p>
-            <button className="btn bg-white text-primary hover:bg-gray-100">
-              Schedule a Consultation
-            </button>
-          </motion.div>
-        </div>
-      </section>
+      </motion.div>
     </div>
   );
-}
+};
 
 export default Services;
