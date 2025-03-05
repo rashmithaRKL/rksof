@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
+import ProjectDetailScene from '../components/3d/ProjectDetailScene';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -57,47 +58,56 @@ const ProjectDetail = () => {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.5
+        duration: 0.5,
+        type: "spring",
+        stiffness: 100
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white py-20">
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white">
+      {/* 3D Scene */}
+      <div className="h-[60vh] relative overflow-hidden">
+        <ProjectDetailScene technologies={project.technologies} />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black">
+          <div className="container mx-auto px-4 h-full flex items-center justify-center">
+            <motion.h1 
+              className="text-6xl md:text-8xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-red-500 to-purple-600"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, type: "spring" }}
+            >
+              {project.title}
+            </motion.h1>
+          </div>
+        </div>
+      </div>
+
       <motion.div
-        className="container mx-auto px-4"
+        className="container mx-auto px-4 py-20"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Back Button */}
-        <motion.div variants={itemVariants} className="mb-8">
+        <motion.div variants={itemVariants} className="mb-12">
           <Link
             to="/projects"
-            className="inline-flex items-center text-yellow-400 hover:text-yellow-300"
+            className="inline-flex items-center text-yellow-400 hover:text-yellow-300 transition-colors group"
           >
-            <i className="fas fa-arrow-left mr-2"></i>
+            <motion.span
+              className="mr-2 transform group-hover:-translate-x-1 transition-transform"
+              whileHover={{ x: -4 }}
+            >
+              ←
+            </motion.span>
             Back to Projects
           </Link>
         </motion.div>
 
-        {/* Hero Section */}
-        <motion.div variants={itemVariants} className="relative rounded-xl overflow-hidden mb-12">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-[400px] object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
-            <div className="absolute bottom-0 left-0 right-0 p-8">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4">{project.title}</h1>
-              <p className="text-xl text-gray-300">{project.description}</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Project Details */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        {/* Project Overview */}
+        <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-8 mb-16">
           {[
             { label: "Client", value: project.client },
             { label: "Duration", value: project.duration },
@@ -105,36 +115,59 @@ const ProjectDetail = () => {
           ].map((detail, index) => (
             <motion.div
               key={index}
-              variants={itemVariants}
-              className="bg-gray-800/50 rounded-lg p-6"
+              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-lg rounded-xl p-8 border border-gray-700/50"
+              whileHover={{ y: -5, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <h3 className="text-gray-400 mb-2">{detail.label}</h3>
-              <p className="text-xl font-semibold">{detail.value}</p>
+              <h3 className="text-gray-400 text-sm uppercase mb-2">{detail.label}</h3>
+              <p className="text-2xl font-semibold bg-gradient-to-r from-yellow-400 to-purple-600 bg-clip-text text-transparent">
+                {detail.value}
+              </p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
+
+        {/* Description */}
+        <motion.p 
+          variants={itemVariants}
+          className="text-xl text-gray-300 leading-relaxed mb-16 max-w-4xl"
+        >
+          {project.description}
+        </motion.p>
 
         {/* Challenge & Solution */}
         <div className="grid md:grid-cols-2 gap-12 mb-16">
-          <motion.div variants={itemVariants}>
-            <h2 className="text-2xl font-bold mb-4">The Challenge</h2>
-            <p className="text-gray-400 leading-relaxed">{project.challenge}</p>
+          <motion.div 
+            variants={itemVariants}
+            className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-lg rounded-xl p-8 border border-gray-700/50"
+          >
+            <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent">
+              The Challenge
+            </h2>
+            <p className="text-gray-300 leading-relaxed">{project.challenge}</p>
           </motion.div>
-          <motion.div variants={itemVariants}>
-            <h2 className="text-2xl font-bold mb-4">Our Solution</h2>
-            <p className="text-gray-400 leading-relaxed">{project.solution}</p>
+          <motion.div 
+            variants={itemVariants}
+            className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-lg rounded-xl p-8 border border-gray-700/50"
+          >
+            <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-red-500 to-purple-600 bg-clip-text text-transparent">
+              Our Solution
+            </h2>
+            <p className="text-gray-300 leading-relaxed">{project.solution}</p>
           </motion.div>
         </div>
 
         {/* Features */}
         <motion.div variants={itemVariants} className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Key Features</h2>
+          <h2 className="text-2xl font-bold mb-8 bg-gradient-to-r from-yellow-400 to-purple-600 bg-clip-text text-transparent">
+            Key Features
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {project.features.map((feature, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-800/50 rounded-lg p-6"
-                whileHover={{ y: -5 }}
+                className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50"
+                whileHover={{ y: -5, scale: 1.02 }}
               >
                 <i className="fas fa-check text-yellow-400 mr-2"></i>
                 {feature}
@@ -143,32 +176,20 @@ const ProjectDetail = () => {
           </div>
         </motion.div>
 
-        {/* Technologies */}
-        <motion.div variants={itemVariants} className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Technologies Used</h2>
-          <div className="flex flex-wrap gap-4">
-            {project.technologies.map((tech, index) => (
-              <motion.div
-                key={index}
-                className="bg-gray-800/50 rounded-full px-6 py-3 flex items-center"
-                whileHover={{ scale: 1.05 }}
-              >
-                <i className={`fas fa-${tech.icon} text-yellow-400 mr-2`}></i>
-                {tech.name}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Results */}
         <motion.div variants={itemVariants} className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Results & Impact</h2>
+          <h2 className="text-2xl font-bold mb-8 bg-gradient-to-r from-yellow-400 to-purple-600 bg-clip-text text-transparent">
+            Results & Impact
+          </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {project.results.map((result, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-800/50 rounded-lg p-6"
-                whileHover={{ scale: 1.02 }}
+                className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50"
+                whileHover={{ 
+                  scale: 1.02,
+                  transition: { type: "spring", stiffness: 300 }
+                }}
               >
                 <i className="fas fa-chart-line text-yellow-400 mr-2"></i>
                 {result}
@@ -179,19 +200,22 @@ const ProjectDetail = () => {
 
         {/* Screenshots */}
         <motion.div variants={itemVariants}>
-          <h2 className="text-2xl font-bold mb-6">Project Screenshots</h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <h2 className="text-2xl font-bold mb-8 bg-gradient-to-r from-yellow-400 to-purple-600 bg-clip-text text-transparent">
+            Project Screenshots
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
             {project.screenshots.map((screenshot, index) => (
               <motion.div
                 key={index}
-                className="rounded-xl overflow-hidden"
+                className="rounded-xl overflow-hidden group relative"
                 whileHover={{ scale: 1.02 }}
               >
                 <img
                   src={screenshot}
                   alt={`Screenshot ${index + 1}`}
-                  className="w-full h-[300px] object-cover"
+                  className="w-full h-[300px] object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.div>
             ))}
           </div>
